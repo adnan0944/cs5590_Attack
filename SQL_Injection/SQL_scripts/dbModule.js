@@ -1,8 +1,8 @@
 //https://www.sqlitetutorial.net/sqlite-nodejs/
 
 const sqlite3 = require('sqlite3').verbose();
-const db_name = './SQL_scripts/example.sqlite'
-
+const db_name = './example.sqlite'
+var dbRes = ''
 // open the database
 let db = new sqlite3.Database(db_name, sqlite3.OPEN_READWRITE, (err) => {
   if (err) {
@@ -12,21 +12,29 @@ let db = new sqlite3.Database(db_name, sqlite3.OPEN_READWRITE, (err) => {
 });
 
 // Read in input from user
-// TODO Insert the entries
-// let sql = `SELECT * FROM Users`;
+// TODO Callback or promise?
+exports.queryDB = function(sqlQuery) {
+  console.log(sqlQuery)
+  db.all(sqlQuery, [], (err, rows) => {
+    if (err) {
+      throw err;
+    }
+    rows.forEach((row) => {
+      console.log(row.fullname);
+      console.log(row.username);
+      console.log(row.password);
+    });
+    dbRes = rows
 
-// db.all(sql, [], (err, rows) => {
-//   if (err) {
-//     throw err;
-//   }
-//   rows.forEach((row) => {
-//     console.log(row.name);
-//   });
-// });
+  });
+};
 
-db.close((err) => {
-  if (err) {
-    console.error(err.message);
-  }
-  console.log('Close the database connection.');
-});
+
+exports.closeDB = function() {
+  db.close((err) => {
+    if (err) {
+      console.error(err.message);
+    }
+    console.log('Close the database connection.');
+  });
+};

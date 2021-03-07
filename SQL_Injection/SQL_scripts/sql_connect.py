@@ -34,4 +34,8 @@ def execute_read_query(connection, query):
 if __name__ == "__main__":
     connection = create_connection("example.sqlite")
     while 1:
-        execute_query(connection, input("Enter SQL Command:\n"))
+        query = input("Enter SQL Command:\n")
+        if 'SELECT' in query:
+            print(execute_read_query(connection, query))
+        else:
+            execute_query(connection, query)

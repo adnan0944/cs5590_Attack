@@ -1,0 +1,1 @@
+INSERT INTO Users (fullname, username, password) VALUES ('John Doe', 'asdf', 'qwerty')
