@@ -1,40 +1,36 @@
-//https://www.sqlitetutorial.net/sqlite-nodejs/
+//https://codeburst.io/node-js-mysql-and-promises-4c3be599909b
 
 const sqlite3 = require('sqlite3').verbose();
 const db_name = './example.sqlite'
-var dbRes = ''
-// open the database
-let db = new sqlite3.Database(db_name, sqlite3.OPEN_READWRITE, (err) => {
-  if (err) {
-    console.error(err.message);
+
+class SQLDatabase {
+  constructor() {
+      this.connection = new sqlite3.Database(db_name, sqlite3.OPEN_READWRITE, (err) => {
+        if (err) {
+          console.error(err.message);
+        }
+        console.log('Connected to the ' +db_name+ ' database.');
+      });
   }
-  console.log('Connected to the ' +db_name+ ' database.');
-});
+  query( sql ) {
+      return new Promise( ( resolve, reject ) => {
+          this.connection.all( sql, [], ( err, rows ) => {
+              if ( err )
+                  return reject( err );
+              resolve( rows );
+          } );
+      } );
+  }
+  close() {
+      return new Promise( ( resolve, reject ) => {
+          this.connection.end( err => {
+              if ( err )
+                  return reject( err );
+              resolve();
+          } );
+          console.log('Close the database connection.');
+      } );
+  }
+}
 
-// Read in input from user
-// TODO Callback or promise?
-exports.queryDB = function(sqlQuery) {
-  console.log(sqlQuery)
-  db.all(sqlQuery, [], (err, rows) => {
-    if (err) {
-      throw err;
-    }
-    rows.forEach((row) => {
-      console.log(row.fullname);
-      console.log(row.username);
-      console.log(row.password);
-    });
-    dbRes = rows
-
-  });
-};
-
-
-exports.closeDB = function() {
-  db.close((err) => {
-    if (err) {
-      console.error(err.message);
-    }
-    console.log('Close the database connection.');
-  });
-};
+module.exports.sqlDB = new SQLDatabase();
