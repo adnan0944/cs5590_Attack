@@ -1,4 +1,5 @@
 //https://codeburst.io/node-js-mysql-and-promises-4c3be599909b
+//https://www.sqlitetutorial.net/sqlite-nodejs/query/
 
 const sqlite3 = require('sqlite3').verbose();
 const db_name = './example.sqlite'
