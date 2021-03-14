@@ -6,7 +6,8 @@ router.use(express.urlencoded({ extended: true }));
 router.use(express.json());
 
 var dt = require(__dirname +'/../SQL_scripts/dbModule.js');
-var currUser = ''
+var currUser = '';
+var friendDict = [];
 
 router.get('/', function(req, res, next) {
   res.sendFile(path.join(__dirname + '/login.html'));
@@ -51,6 +52,7 @@ router.get('/profile/:username', function(req, res){
         friends: rows[0].friends
       }
     };
+    console.log(rows[0].friends)
     res.render('dynamic', thisUser);
   } 
     else {
@@ -63,10 +65,11 @@ router.get('/profile/:username', function(req, res){
 
 //Only incrementing a counter, update to put pfps as icons
 router.post('/:username/addFriend', function(req, res){
-  console.log(req.body)
   profileChanges = JSON.parse(JSON.stringify(req.body))
   friend = profileChanges["user"]
-  if(friend != currUser){
+  var hash = friend + currUser
+  var hash2 = currUser + friend
+  if(friend != currUser && !(friendDict.includes(hash) || friendDict.includes(hash2))){
     console.log("Adding Friend " + friend + " by user " + currUser)
 
     //Friend Being Added
@@ -78,19 +81,22 @@ router.post('/:username/addFriend', function(req, res){
     var sqlQuery = `UPDATE Users SET friends=friends+1 WHERE username = '`+currUser+`'`;
     console.log(sqlQuery)
     dt.sqlDB.query(sqlQuery);
-    res.redirect('/profile/'+req.params.username);
+
+    friendDict.push(hash)
+    friendDict.push(hash2)
   }
+  res.redirect('/profile/'+friend);
 });
 
 router.get('/resetFriends', function(req, res){
   //Friend Being Added
   var sqlQuery = `UPDATE Users SET friends=0 WHERE userID < 3`;
   dt.sqlDB.query(sqlQuery);
+  friendDict = [];
   res.redirect('/');
 });
 
 router.get('/members', function(req, res){
-  console.log("Viewing Members")
   var users = {user1: { 
     name: 'Samy', 
     pfp: '../images/samy_pfp.jpg', 
@@ -116,7 +122,6 @@ router.get('/:username/edit', function(req, res, next) {
   var sqlQuery = `SELECT * FROM Users WHERE username='`+req.params.username+`'`
   var thisUser = null
   dt.sqlDB.query(sqlQuery).then( rows => {
-    console.log(rows)
     if (rows != undefined && rows.length == 1) {
       // Show page
       thisUser = {user: {
@@ -139,7 +144,6 @@ router.get('/:username/edit', function(req, res, next) {
 
 
 router.post('/edit', function(req, res, next) {
-  console.log("Editing")
   profileChanges = JSON.parse(JSON.stringify(req.body))
   thisUsername = profileChanges["user"]
   thisFullname = profileChanges["fullname"]
