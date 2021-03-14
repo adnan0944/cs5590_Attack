@@ -22,10 +22,10 @@ router.post('/', function(req, res, next) {
   username = loginCreds["username"]
   password = loginCreds["password"]
 
-  var sqlQuery = `SELECT * FROM Users WHERE username='`+username+`' AND password='`+password+`'`//FIX ME!!!
+  var sqlQuery = `SELECT * FROM Users WHERE username='`+username+`' AND password='`+password+`'`
   dt.sqlDB.query(sqlQuery).then( rows => {
     console.log(rows)
-    if (rows != undefined && rows.length > 0) { //FIX ME!!!
+    if (rows != undefined && rows.length == 1) {
       // Show page
       console.log("Success! :)")
       res.sendFile(path.join(__dirname + '/login_success.html'));

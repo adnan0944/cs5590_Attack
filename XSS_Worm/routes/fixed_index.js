@@ -51,7 +51,7 @@ router.get('/profile/:username', function(req, res){
         friends: rows[0].friends
       }
     };
-    res.render('dynamic', thisUser);
+    res.render('fixed_dynamic', thisUser);
   } 
     else {
       // Show failure with db error

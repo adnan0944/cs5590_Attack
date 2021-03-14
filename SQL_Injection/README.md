@@ -9,6 +9,8 @@
     <li>sqlite3</li>
 </ul>
 
+Install packages by typing `npm install`
+
 **Run Server**<br>
 `node app.js`<br>
 Then navigate to `localhost:9100` on browser.
@@ -47,14 +49,14 @@ If a user types in an incorrect username or password, the site will simply redir
 **Login Through SQL Injection**
 ![](screenshots/injection.png)
 
-**Code in `routes/index.js`**
+**Code in `routes/index.js`**<br>
 `SELECT * FROM Users WHERE username='`+username+`' AND password='`+password+`'`<br>
 `if (rows != undefined && rows.length > 0)` <br>
 
 However, because the query to the SQL database is not properly sanitized and only checking for an existing record, we can simply input a username and password of `' OR '1==1` that will always return `TRUE` and gain access to the profile page. The resulting backend query would look like this:<br>
 `SELECT * FROM Users WHERE username='' OR '1==1' AND password='' OR '1==1'`<br>
 
-**Defense Against SQL Injection**
+**Defense Against SQL Injection**<br>
 OWASP provides a good prevention cheat sheet [here](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html)<br>
 
 For our purposes, changing the SQL query and the condition to indicate successful login in the file `routes/index.js`. Those changes are reflected in `routes/fixed_index.js`. Simply run `node fixed_app.js` to view corrections.

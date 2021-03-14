@@ -56,9 +56,9 @@ h2(style='text-align:center') User Profile Card
       button(style='width:50%') Members
   img(src=user.pfp alt=user.name style='width:100%')
   h1=user.name
-  | !{user.occupation}
+  p=user.occupation
   <br>
-  | !{user.association} 
+  p=user.association
   div(style='margin: 24px 0;')
     a(href='#')
       i.fa.fa-dribbble
