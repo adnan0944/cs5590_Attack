@@ -1,0 +1,1 @@
+INSERT INTO Users (fullname, username, password, pfp, occupation, association) VALUES ('Samy', 'elite', 'hacker', './images/samy_pfp.jpg', 'Hacker', 'MySpace'),('John', 'average', 'guy', './images/john_doe_pfp.jpg', 'Graduate Student, Researcher', 'Virginia Tech'),('Alice', 'queen', 'hearts', './images/alice_pfp.png', 'Hiker', 'Wonderland')

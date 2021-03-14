@@ -1,0 +1,73 @@
+doctype html
+// https://www.w3schools.com/howto/howto_css_profile_card.asp
+head
+  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
+  style.
+    .card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    max-width: 300px;
+    margin: auto;
+    text-align: center;
+    font-family: arial;
+    }
+    .title {
+    color: grey;
+    font-size: 18px;
+    }
+    button {
+    border: none;
+    outline: 0;
+    display: inline-block;
+    padding: 8px;
+    color: white;
+    background-color: #000;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-size: 18px;
+    }
+    a {
+    text-decoration: none;
+    font-size: 22px;
+    color: black;
+    }
+    button:hover, a:hover {
+    opacity: 0.7;
+    }
+    .btn-group button {
+    max-width: 300px;
+    text-align: center;
+    background-color: blue;
+    border: 1px black;
+    color: white; 
+    padding: 10px 24px; 
+    cursor: pointer; 
+    float: left; 
+    }
+title="net-test-work.com"
+h2(style='text-align:center') User Profile Card
+.card
+  .btn-group
+    a(href='/'+user.username+'/edit')
+      button(style='width:50%') Edit Profile
+    a(href='/members')
+      button(style='width:50%') Members
+  img(src=user.pfp alt=user.name style='width:100%')
+  h1=user.name
+  p.title=user.occupation
+  | !{user.association} 
+  div(style='margin: 24px 0;')
+    a(href='#')
+      i.fa.fa-dribbble
+    a(href='#')
+      i.fa.fa-twitter
+    a(href='#')
+      i.fa.fa-linkedin
+    a(href='#')
+      i.fa.fa-facebook
+  p 
+    button Contact
+  p Friends
+  form(action='/'+user.username+'/addFriend' method='post')
+    button(type='submit' name='user' value=user.username) AddFriend
+    
