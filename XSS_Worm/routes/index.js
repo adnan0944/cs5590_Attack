@@ -30,18 +30,6 @@ router.post('/', function(req, res, next) {
       res.redirect('/')
     }
   });
-
-  // if(username == "elite" && password == "hacker") {
-  //   res.redirect('/samy');
-  // }
-
-  // if(username == "average" && password == "guy") {
-  //   res.redirect('/john');
-  // }
-
-  // if(username == "queen" && password == "hearts") {
-  //   res.redirect('/alice');
-  // }
 });
 
 router.get('/profile/:username', function(req, res){
@@ -58,7 +46,7 @@ router.get('/profile/:username', function(req, res){
     if (rows != undefined && rows.length == 1) {
       // Show page
       thisUser = {user: {
-        username: username, 
+        username: rows[0].username, 
         name: rows[0].fullname, 
         pfp: '../'+rows[0].pfp, 
         occupation: rows[0].occupation, 
@@ -75,20 +63,12 @@ router.get('/profile/:username', function(req, res){
   });
 });
 
-// router.get('/john', function(req, res){
-//   var thisUser = {user: { name: "John", pfp: "./images/john_doe_pfp.jpg", occupation: "Graduate Student, Researcher", association: "Virginia Tech"}}
-//   res.render('dynamic', thisUser);
-// });
-
-// router.get('/alice', function(req, res){
-//   var thisUser = {user: { name: "Alice", pfp: "./images/alice_pfp.png", occupation: "Hiker", association: "Wonderland"}}
-//   res.render('dynamic', thisUser);
-// });
-
 router.post('/:username/addFriend', function(req, res){
   profileChanges = JSON.parse(JSON.stringify(req.body))
   friend = profileChanges["user"]
   console.log("Adding Friend " + friend)
+  console.log(req.params.username)
+  res.redirect('/profile/'+req.params.username)
 });
 
 router.get('/members', function(req, res){
@@ -116,18 +96,6 @@ router.get('/members', function(req, res){
 // Can create a view for general using pug
 router.get('/:username/edit', function(req, res, next) {
   // res.sendFile(path.join(__dirname + '/edit_profile.html'));
-  res.render('dynamic', thisUser);
-});
-
-
-router.post('/:username/edit', function(req, res, next) {
-  profileChanges = JSON.parse(JSON.stringify(req.body))
-  thisFullname = profileChanges["fullname"]
-  thisOccupation = profileChanges["occupation"]
-  thisAssociation = profileChanges["association"]
-
-  console.log(association)
-
   var sqlQuery = `SELECT * FROM Users WHERE username='`+req.params.username+`'`
   var thisUser = null
   dt.sqlDB.query(sqlQuery).then( rows => {
@@ -135,20 +103,37 @@ router.post('/:username/edit', function(req, res, next) {
     if (rows != undefined && rows.length == 1) {
       // Show page
       thisUser = {user: {
-        username: username, 
-        name: thisFullname, 
+        username: rows[0].username, 
+        name: rows[0].fullname, 
         pfp: '../'+rows[0].pfp, 
-        occupation: thisOccupation, 
-        association: thisAssociation}
+        occupation: rows[0].occupation, 
+        association: rows[0].association}
     };
     console.log(thisUser)
-    res.redirect('/profile'+username);
+    res.render('edit', thisUser);
   } 
     else {
       // Show failure with db error
       console.log("Failure Edit! :(")
       res.redirect('/')
     }
+  });
+});
+
+
+router.post('/edit', function(req, res, next) {
+  profileChanges = JSON.parse(JSON.stringify(req.body))
+  thisUsername = profileChanges["user"]
+  thisFullname = profileChanges["fullname"]
+  thisOccupation = profileChanges["occupation"]
+  thisAssociation = profileChanges["association"]
+
+  
+  var sqlQuery = `UPDATE Users SET fullname ='` +thisFullname+`', occupation = '`+thisOccupation+`', association = '`+thisAssociation+`' WHERE username = '`+thisUsername+`'`;
+  console.log(sqlQuery)
+  dt.sqlDB.query(sqlQuery).then( rows => {
+    console.log(rows)
+    res.redirect('/profile/'+thisUsername);
   });
 });
 

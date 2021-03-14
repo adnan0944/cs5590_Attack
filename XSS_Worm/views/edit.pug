@@ -58,20 +58,18 @@ head
 h2 Update Profile
 form(action='/edit' method='post')
   .imgcontainer
-    img.logo(src='./images/samy_pfp.jpg' alt='Logo')
+    img.logo(src=user.pfp alt='Logo')
   .container
+    input(type='hidden' name='user' value='elite')
     label(for='uname')
       b Full Name
-    input(type='text' placeholder='Samy' name='fullname')
+    input(type='text' placeholder=user.name name='fullname')
     label(for='occup')
       b Occupation
-    input(type='text' placeholder='Hacker' name='occupation')
+    input(type='text' placeholder=user.occupation name='occupation')
     label(for='assoc')
       b Association
-    input(type='text' placeholder='MySpace' name='association')
+    input(type='text' placeholder=user.association name='association')
     button(type='submit') Update
   .container(style='background-color:#f1f1f1')
     button.cancelbtn(type='button') Cancel
-    span.psw
-      | Forgot 
-      a(href='#') password?
