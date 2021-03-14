@@ -56,7 +56,7 @@ If a user types in an incorrect username or password, the site will simply redir
 However, because the query to the SQL database is not properly sanitized and only checking for an existing record, we can simply input a username and password of `' OR '1==1` that will always return `TRUE` and gain access to the profile page. The resulting backend query would look like this:<br>
 `SELECT * FROM Users WHERE username='' OR '1==1' AND password='' OR '1==1'`<br>
 
-**Defense Against SQL Injection**<br>
+## Defense Against SQL Injection
 OWASP provides a good prevention cheat sheet [here](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html)<br>
 
 For our purposes, changing the SQL query and the condition to indicate successful login in the file `routes/index.js`. Those changes are reflected in `routes/fixed_index.js`. Simply run `node fixed_app.js` to view corrections.
