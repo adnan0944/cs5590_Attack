@@ -67,7 +67,7 @@ h2(style='text-align:center') User Profile Card
       i.fa.fa-facebook
   p 
     button Contact
-  p Friends
+  p Number of Friends: !{user.friends}
   form(action='/'+user.username+'/addFriend' method='post')
     button(type='submit' name='user' value=user.username) Add Friend
     

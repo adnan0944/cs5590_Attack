@@ -6,6 +6,7 @@ router.use(express.urlencoded({ extended: true }));
 router.use(express.json());
 
 var dt = require(__dirname +'/../SQL_scripts/dbModule.js');
+var currUser = ''
 
 router.get('/', function(req, res, next) {
   res.sendFile(path.join(__dirname + '/login.html'));
@@ -21,6 +22,7 @@ router.post('/', function(req, res, next) {
     if (rows != undefined && rows.length == 1) {
       // Show page
       console.log("Success! :)")
+      currUser = username
       req.params.name = username
       res.redirect('/profile/'+username)
     }
@@ -33,14 +35,9 @@ router.post('/', function(req, res, next) {
 });
 
 router.get('/profile/:username', function(req, res){
-  //var exploit = "<form action=\"/action_page.php\"><button "
-  //<script>window.location.href='/addfriend'</script>
-  console.log("_______________________")
-  console.log(req.params.username)
-  console.log("_______________________")
-
   var sqlQuery = `SELECT * FROM Users WHERE username='`+req.params.username+`'`
   var thisUser = null
+  var userID = -1
   dt.sqlDB.query(sqlQuery).then( rows => {
     console.log(rows)
     if (rows != undefined && rows.length == 1) {
@@ -50,9 +47,10 @@ router.get('/profile/:username', function(req, res){
         name: rows[0].fullname, 
         pfp: '../'+rows[0].pfp, 
         occupation: rows[0].occupation, 
-        association: rows[0].association}
+        association: rows[0].association,
+        friends: rows[0].friends
+      }
     };
-    console.log(thisUser)
     res.render('dynamic', thisUser);
   } 
     else {
@@ -64,11 +62,30 @@ router.get('/profile/:username', function(req, res){
 });
 
 router.post('/:username/addFriend', function(req, res){
+  console.log(req.body)
   profileChanges = JSON.parse(JSON.stringify(req.body))
   friend = profileChanges["user"]
-  console.log("Adding Friend " + friend)
-  console.log(req.params.username)
-  res.redirect('/profile/'+req.params.username)
+  if(friend != currUser){
+    console.log("Adding Friend " + friend + " by user " + currUser)
+
+    //Friend Being Added
+    var sqlQuery = `UPDATE Users SET friends=friends+1 WHERE username = '`+friend+`'`;
+    console.log(sqlQuery)
+    dt.sqlDB.query(sqlQuery);
+
+    //User doing the adding
+    var sqlQuery = `UPDATE Users SET friends=friends+1 WHERE username = '`+currUser+`'`;
+    console.log(sqlQuery)
+    dt.sqlDB.query(sqlQuery);
+    res.redirect('/profile/'+req.params.username);
+  }
+});
+
+router.get('/resetFriends', function(req, res){
+  //Friend Being Added
+  var sqlQuery = `UPDATE Users SET friends=0 WHERE userID < 3`;
+  dt.sqlDB.query(sqlQuery);
+  res.redirect('/');
 });
 
 router.get('/members', function(req, res){
@@ -135,6 +152,11 @@ router.post('/edit', function(req, res, next) {
     console.log(rows)
     res.redirect('/profile/'+thisUsername);
   });
+});
+
+//The 404 Route (ALWAYS Keep this as the last route)
+router.get('*', function(req, res){
+  res.status(404).send('what???');
 });
 
 module.exports = router;
