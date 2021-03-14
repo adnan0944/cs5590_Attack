@@ -26,7 +26,7 @@ Will create default user 'John Doe' with username 'asdf' and password 'qwerty'. 
 
 Input for XSS Worm is stored in `exploit.txt`
 
-## What is SQL Injection
+## What is XSS Worm
 From [Wikipedia](https://en.wikipedia.org/wiki/XSS_worm)
 > An XSS worm, sometimes referred to as a cross site scripting virus, is a malicious (or sometimes non-malicious) payload, usually written in JavaScript, that breaches browser security to propagate among visitors of a website in the attempt to progressively infect other visitors.
 
