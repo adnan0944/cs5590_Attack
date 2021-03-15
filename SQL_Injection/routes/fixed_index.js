@@ -4,7 +4,7 @@ var router = express.Router();
 var path = require('path');
 
 // Custom
-var dt = require(__dirname +'/../SQL_scripts/dbModule.js');
+var dt = require(__dirname +'/../SQL_scripts/fixed_dbModule.js');
 
 // Parsing Post
 router.use(express.urlencoded({ extended: true }));
@@ -22,8 +22,8 @@ router.post('/', function(req, res, next) {
   username = loginCreds["username"]
   password = loginCreds["password"]
 
-  var sqlQuery = `SELECT * FROM Users WHERE username='`+username+`' AND password='`+password+`'`
-  dt.sqlDB.query(sqlQuery).then( rows => {
+  var sqlQuery = `SELECT * FROM Users WHERE username= ? AND password= ?`
+  dt.sqlDB.query(sqlQuery, [username, password]).then( rows => {
     console.log(rows)
     if (rows != undefined && rows.length == 1) {
       // Show page
